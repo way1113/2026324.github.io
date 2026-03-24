@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌍 撒哈拉以南非洲 · 人口 vs 粮食增长对比</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #1d4e3c 0%, #3f6b4f 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .card {
+            max-width: 1100px;
+            width: 100%;
+            background: #fef9e9;
+            border-radius: 56px;
+            box-shadow: 0 30px 40px #0e3d2c70;
+            border: 3px solid #efc9a0;
+            padding: 30px;
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.3rem;
+            color: #2a573f;
+            text-align: center;
+        }
+        h1 span {
+            background: #e38b4b;
+            color: white;
+            font-size: 1.2rem;
+            padding: 6px 22px;
+            border-radius: 60px;
+            display: inline-block;
+            margin-left: 15px;
+        }
+        .subhead {
+            color: #3b6a4c;
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 0 0 30px 0;
+            padding: 10px;
+            background: #e5f0e6;
+            border-radius: 40px;
+        }
+        .chart-container {
+            background: #fffcf0;
+            border-radius: 60px;
+            padding: 30px;
+            border: 2px solid #eac784;
+        }
+        
+        /* 年份显示 */
+        .year-box {
+            background: #2f5d47;
+            color: white;
+            padding: 20px;
+            border-radius: 60px;
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            width: 200px;
+            margin: 0 auto 30px auto;
+            box-shadow: 0 8px 0 #173e2d;
+        }
+        
+        /* 进度条区域 */
+        .bar-container {
+            margin: 30px 0;
+        }
+        .bar-item {
+            margin: 25px 0;
+        }
+        .bar-label {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d543b;
+        }
+        .bar-bg {
+            width: 100%;
+            height: 60px;
+            background: #d9c49b;
+            border-radius: 40px;
+            box-shadow: inset 0 4px 8px #8f764b;
+            position: relative;
+        }
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f5b042, #f57c33);
+            border-radius: 40px;
+            box-shadow: 0 4px 0 #b15619;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 25px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 0 #894f1a;
+        }
+        .粮食 .bar-fill {
+            background: linear-gradient(90deg, #72b78b, #37835b);
+            box-shadow: 0 4px 0 #1f6641;
+        }
+        
+        /* 数值显示 */
+        .stats-box {
+            display: flex;
+            justify-content: space-around;
+            background: #f2e1c0;
+            border-radius: 60px;
+            padding: 20px;
+            margin: 30px 0;
+            font-size: 1.3rem;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #c44513;
+        }
+        .粮食 .stat-value {
+            color: #1f7543;
+        }
+        .gap-message {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        /* 滑块 */
+        .slider-container {
+            margin: 30px 0;
+        }
+        input[type=range] {
+            width: 100%;
+            height: 20px;
+            background: #eed7af;
+            border-radius: 40px;
+            -webkit-appearance: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 50px;
+            height: 50px;
+            background: #f3b33d;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 6px 0 #9a6629;
+            cursor: pointer;
+        }
+        
+        /* 按钮组 */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: white;
+            border: 3px solid #4e825d;
+            color: #1f5239;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #366142;
+            transition: 0.1s;
+            min-width: 150px;
+        }
+        .btn:active {
+            transform: translateY(6px);
+            box-shadow: none;
+        }
+        .btn:hover {
+            background: #f3b33d;
+            color: white;
+        }
+        
+        .footnote {
+            margin-top: 25px;
+            color: #23573b;
+            background: #fdeaac;
+            padding: 15px;
+            border-radius: 60px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>
+        🍚👨‍👩‍👧‍👦 撒哈拉以南非洲 
+        <span>种粮追不上吃饭</span>
+    </h1>
+    <div class="subhead">
+        📈 1961-2023 人口与粮食产量指数对比 (1961年=100)
+    </div>
+
+    <div class="chart-container">
+        <!-- 当前年份 -->
+        <div class="year-box" id="yearDisplay">1990</div>
+
+        <!-- 人口进度条 -->
+        <div class="bar-container">
+            <div class="bar-item">
+                <div class="bar-label">👥 人口增长指数</div>
+                <div class="bar-bg">
+                    <div class="bar-fill" id="人口Bar" style="width: 40.7%">244</div>
+                </div>
+            </div>
+            
+            <!-- 粮食进度条 -->
+            <div class="bar-item 粮食">
+                <div class="bar-label">🌽 粮食产量指数</div>
+                <div class="bar-bg">
+                    <div class="bar-fill" id="粮食Bar" style="width: 28.3%">170</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 年份刻度 -->
+        <div style="display: flex; justify-content: space-between; padding: 0 10px; font-weight: bold;">
+            <span>1961</span><span>1970</span><span>1980</span><span>1990</span><span>2000</span><span>2010</span><span>2023</span>
+        </div>
+
+        <!-- 滑块 -->
+        <div class="slider-container">
+            <input type="range" id="yearSlider" min="1961" max="2023" value="1990" step="1">
+        </div>
+
+        <!-- 统计数据 -->
+        <div class="stats-box">
+            <div class="stat-item">
+                <div>👥 人口</div>
+                <div class="stat-value" id="人口数值">244</div>
+            </div>
+            <div class="stat-item 粮食">
+                <div>🌽 粮食</div>
+                <div class="stat-value" id="粮食数值">170</div>
+            </div>
+        </div>
+        
+        <!-- 差距提示 -->
+        <div class="gap-message" id="gapMessage">
+            ❗ 人口超过粮食 74 点
+        </div>
+
+        <!-- 快速跳转按钮 -->
+        <div class="button-group">
+            <button class="btn" onclick="changeYear(1961)">1961 基准年</button>
+            <button class="btn" onclick="changeYear(1975)">1975 缓慢增长</button>
+            <button class="btn" onclick="changeYear(1984)">1984 大旱</button>
+            <button class="btn" onclick="changeYear(1995)">1995 差距拉大</button>
+            <button class="btn" onclick="changeYear(2008)">2008 粮食危机</button>
+            <button class="btn" onclick="changeYear(2023)">2023 差距最大</button>
+        </div>
+
+        <div class="footnote">
+            💡 <strong>拖动滑块或点击上方按钮，所有数据都会实时变化！</strong>
+        </div>
+    </div>
+</div>
+
+<script>
+// 使用全局函数，确保按钮可以直接调用
+function changeYear(year) {
+    console.log("changeYear被调用:", year);
+    
+    // 更新滑块
+    const slider = document.getElementById('yearSlider');
+    if (slider) {
+        slider.value = year;
+    }
+    
+    // 更新所有显示
+    updateAllDisplays(year);
+    
+    // 按钮视觉反馈
+    const buttons = document.getElementsByClassName('btn');
+    for(let btn of buttons) {
+        if(btn.getAttribute('onclick')?.includes(year)) {
+            btn.style.backgroundColor = '#f3b33d';
+            btn.style.color = 'white';
+            setTimeout(() => {
+                btn.style.backgroundColor = 'white';
+                btn.style.color = '#1f5239';
+            }, 200);
+        }
+    }
+}
+
+// 更新所有显示的函数
+function updateAllDisplays(year) {
+    console.log("更新年份:", year);
+    
+    // 根据年份计算人口和粮食指数
+    // 使用简单直接的公式，确保每个年份都有唯一值
+    
+    // 人口公式: 1961年100，2023年560，线性增长 + 加速因子
+    let population;
+    if (year <= 1965) {
+        population = 100 + (year - 1961) * 3;
+    } else if (year <= 1970) {
+        population = 112 + (year - 1965) * 3.6;
+    } else if (year <= 1975) {
+        population = 130 + (year - 1970) * 4.4;
+    } else if (year <= 1980) {
+        population = 152 + (year - 1975) * 5.4;
+    } else if (year <= 1985) {
+        population = 179 + (year - 1980) * 6;
+    } else if (year <= 1990) {
+        population = 209 + (year - 1985) * 7;
+    } else if (year <= 1995) {
+        population = 244 + (year - 1990) * 7.2;
+    } else if (year <= 2000) {
+        population = 280 + (year - 1995) * 8;
+    } else if (year <= 2005) {
+        population = 320 + (year - 2000) * 8.4;
+    } else if (year <= 2010) {
+        population = 362 + (year - 2005) * 10;
+    } else if (year <= 2015) {
+        population = 412 + (year - 2010) * 11.2;
+    } else if (year <= 2020) {
+        population = 468 + (year - 2015) * 11.8;
+    } else {
+        population = 527 + (year - 2020) * 11;
+    }
+    
+    // 粮食公式: 1961年100，2023年310，增长较慢且有波动
+    let food;
+    if (year <= 1965) {
+        food = 100 + (year - 1961) * 2;
+    } else if (year <= 1970) {
+        food = 108 + (year - 1965) * 2.8;
+    } else if (year <= 1975) {
+        food = 122 + (year - 1970) * 2.6;
+    } else if (year <= 1980) {
+        food = 135 + (year - 1975) * 2.6;
+    } else if (year <= 1985) {
+        food = 148 + (year - 1980) * 0.4; // 干旱
+    } else if (year <= 1990) {
+        food = 150 + (year - 1985) * 4;
+    } else if (year <= 1995) {
+        food = 170 + (year - 1990) * 2.4;
+    } else if (year <= 2000) {
+        food = 182 + (year - 1995) * 5.6;
+    } else if (year <= 2005) {
+        food = 210 + (year - 2000) * 4;
+    } else if (year <= 2010) {
+        food = 230 + (year - 2005) * 5.6;
+    } else if (year <= 2015) {
+        food = 258 + (year - 2010) * 4.4;
+    } else if (year <= 2020) {
+        food = 280 + (year - 2015) * 3.2;
+    } else {
+        food = 296 + (year - 2020) * 4.7;
+    }
+    
+    // 取整
+    population = Math.round(population);
+    food = Math.round(food);
+    
+    console.log("计算得到 - 人口:", population, "粮食:", food);
+    
+    // 更新年份显示
+    const yearDisplay = document.getElementById('yearDisplay');
+    if (yearDisplay) yearDisplay.innerText = year;
+    
+    // 更新数字显示
+    const人口数值 = document.getElementById('人口数值');
+    const粮食数值 = document.getElementById('粮食数值');
+    if (人口数值) 人口数值.innerText = population;
+    if (粮食数值) 粮食数值.innerText = food;
+    
+    // 更新进度条
+    const人口Bar = document.getElementById('人口Bar');
+    const粮食Bar = document.getElementById('粮食Bar');
+    
+    // 最大参考值600
+    const maxRef = 600;
+    const popPercent = (population / maxRef) * 100;
+    const foodPercent = (food / maxRef) * 100;
+    
+    if (人口Bar) {
+        人口Bar.style.width = popPercent + '%';
+        人口Bar.innerText = population;
+    }
+    
+    if (粮食Bar) {
+        粮食Bar.style.width = foodPercent + '%';
+        粮食Bar.innerText = food;
+    }
+    
+    // 更新差距信息
+    const gapMsg = document.getElementById('gapMessage');
+    if (gapMsg) {
+        const gap = population - food;
+        gapMsg.innerHTML = `❗ 人口超过粮食 ${gap} 点`;
+        if (population > food * 1.7) {
+            gapMsg.innerHTML += ' ⚠️ 缺口巨大';
+        }
+    }
+}
+
+// 页面加载完成后初始化
+window.onload = function() {
+    console.log("页面加载完成");
+    
+    // 获取滑块
+    const slider = document.getElementById('yearSlider');
+    
+    // 滑块输入事件
+    slider.addEventListener('input', function(e) {
+        const year = parseInt(e.target.value);
+        updateAllDisplays(year);
+    });
+    
+    // 滑块改变事件（备用）
+    slider.addEventListener('change', function(e) {
+        const year = parseInt(e.target.value);
+        updateAllDisplays(year);
+    });
+    
+    // 初始更新
+    updateAllDisplays(1990);
+    
+    console.log("初始化完成");
+};
+
+// 为了确保按钮工作，也在全局暴露函数
+window.changeYear = changeYear;
+</script>
+</body>
+</html>
